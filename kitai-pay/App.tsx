@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import TransactionsScreen from './screens/TransactionsScreen';
 
 const App = () => {
   return (
@@ -36,22 +37,23 @@ const AppInner = () => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <View style={styles.view}>
-        <Text style={textStyles}>React Native thirdweb starter</Text>
-        <ConnectWallet />
-      </View>
-    </SafeAreaView>
+    <View style={styles.view}>
+      <Text style={textStyles}>React Native thirdweb starter</Text>
+      <ConnectWallet />
+      <Text style={textStyles}>React Native thirdweb starter</Text>
+      <TransactionsScreen />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   view: {
+    flex: 1,
     height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
+    backgroundColor: 'Blue',
+  },
+  listView: {
+    backgroundColor: 'Red',
   },
   heading: {
     fontSize: 24,
