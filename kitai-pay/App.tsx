@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import TransactionsScreen from './screens/TransactionsScreen';
+import QRCodeScreen from './screens/QRCodeScanner';
 
 const App = () => {
   return (
@@ -38,10 +39,11 @@ const AppInner = () => {
 
   return (
     <View style={styles.view}>
-      <Text style={textStyles}>React Native thirdweb starter</Text>
+      {/* <Text style={textStyles}>React Native thirdweb starter</Text>
       <ConnectWallet />
       <Text style={textStyles}>React Native thirdweb starter</Text>
-      <TransactionsScreen />
+      <TransactionsScreen /> */}
+      <QRCodeScreen />
     </View>
   );
 };
