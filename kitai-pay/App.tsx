@@ -38,9 +38,9 @@ const AppInner = () => {
 
   return (
     <View style={styles.view}>
-      <Text style={textStyles}>React Native thirdweb starter</Text>
+      {/* <Text style={textStyles}>React Native thirdweb starter</Text>
       <ConnectWallet />
-      <Text style={textStyles}>React Native thirdweb starter</Text>
+      <Text style={textStyles}>React Native thirdweb starter</Text> */}
       <TransactionsScreen />
     </View>
   );
