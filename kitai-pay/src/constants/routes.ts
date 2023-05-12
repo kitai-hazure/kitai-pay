@@ -3,4 +3,5 @@ export const ROUTES = {
   LOGIN: 'LOGIN',
   ONBOARDING: 'ONBOARDING',
   MAIN: 'MAIN',
+  QRCODESCAN: 'QRCODESCAN',
 };
