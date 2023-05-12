@@ -1,0 +1,6 @@
+export const ROUTES = {
+  DASHBOARD: 'DASHBOARD',
+  LOGIN: 'LOGIN',
+  ONBOARDING: 'ONBOARDING',
+  MAIN: 'MAIN',
+};
