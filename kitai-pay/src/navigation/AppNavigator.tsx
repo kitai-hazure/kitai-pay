@@ -4,12 +4,22 @@ import { Onboarding, QRCodeScreen } from '../screens';
 import MainNavigator from './MainNavigator';
 import { ROUTES } from '../constants';
 
-const StackNav = createStackNavigator();
+export type AppNavigatorParamList = {
+  [ROUTES.ONBOARDING]: undefined;
+  [ROUTES.MAIN]: undefined;
+  [ROUTES.QRCODESCAN]: undefined;
+};
 
-const AppNavigator = () => {
+const StackNav = createStackNavigator<AppNavigatorParamList>();
+
+interface AppNavigatorProps {
+  isLoggedIn: boolean;
+}
+
+const AppNavigator = ({ isLoggedIn }: AppNavigatorProps) => {
   return (
     <StackNav.Navigator
-      initialRouteName={ROUTES.MAIN}
+      initialRouteName={isLoggedIn ? ROUTES.MAIN : ROUTES.ONBOARDING}
       screenOptions={{ headerShown: false }}>
       <StackNav.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
       <StackNav.Screen name={ROUTES.QRCODESCAN} component={QRCodeScreen} />
