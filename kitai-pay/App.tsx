@@ -5,32 +5,27 @@ import {
   ThirdwebProvider,
 } from '@thirdweb-dev/react-native';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { AppNavigator } from './src/navigation';
 import { NavigationContainer } from '@react-navigation/native';
-import { useStart } from './src/hooks';
+import { AppInner } from './src/navigation';
+import { StyleSheet } from 'react-native';
+import { Provider } from 'react-redux';
+import { store } from './src/redux';
 
 const App = () => {
-  const { isLoggedIn } = useStart();
-
-  if (isLoggedIn === null) {
-    return <Text>Loading.... </Text>;
-  }
-
   return (
-    <ThirdwebProvider
-      theme="dark"
-      activeChain="polygon"
-      supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}>
-      <NavigationContainer>
-        <GestureHandlerRootView style={styles.fullScreen}>
-          <SafeAreaView style={styles.fullScreen}>
-            <AppNavigator isLoggedIn={isLoggedIn} />
-          </SafeAreaView>
-        </GestureHandlerRootView>
-      </NavigationContainer>
-    </ThirdwebProvider>
+    <Provider store={store}>
+      <ThirdwebProvider
+        theme="dark"
+        activeChain="polygon"
+        supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}>
+        <NavigationContainer>
+          <GestureHandlerRootView style={styles.fullScreen}>
+            <AppInner />
+          </GestureHandlerRootView>
+        </NavigationContainer>
+      </ThirdwebProvider>
+    </Provider>
   );
 };
 

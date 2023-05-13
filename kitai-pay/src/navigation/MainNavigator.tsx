@@ -4,7 +4,12 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 import { ROUTES } from '../constants';
 import { QRCodeScreen } from '../screens';
 
-const StackNav = createSharedElementStackNavigator();
+export type MainNavigatorParamList = {
+  [ROUTES.DASHBOARD]: undefined;
+  [ROUTES.QRCODESCAN]: undefined;
+};
+
+const StackNav = createSharedElementStackNavigator<MainNavigatorParamList>();
 
 const Dashboard = () => {
   return <ConnectWallet />;

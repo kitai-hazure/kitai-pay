@@ -1,29 +1,31 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Onboarding, QRCodeScreen } from '../screens';
+import { Biometric, Onboarding } from '../screens';
 import MainNavigator from './MainNavigator';
 import { ROUTES } from '../constants';
+import { useSelector } from 'react-redux';
+import { selectAuthState } from '../redux';
+import { getInitialRoute } from '../helpers';
 
 export type AppNavigatorParamList = {
   [ROUTES.ONBOARDING]: undefined;
   [ROUTES.MAIN]: undefined;
-  [ROUTES.QRCODESCAN]: undefined;
+  [ROUTES.BIOMETRIC]: undefined;
 };
 
 const StackNav = createStackNavigator<AppNavigatorParamList>();
 
-interface AppNavigatorProps {
-  isLoggedIn: boolean;
-}
+const AppNavigator = () => {
+  const authState = useSelector(selectAuthState);
+  const initialRoute = getInitialRoute(authState);
 
-const AppNavigator = ({ isLoggedIn }: AppNavigatorProps) => {
   return (
     <StackNav.Navigator
-      initialRouteName={isLoggedIn ? ROUTES.MAIN : ROUTES.ONBOARDING}
+      initialRouteName={initialRoute}
       screenOptions={{ headerShown: false }}>
       <StackNav.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
-      <StackNav.Screen name={ROUTES.QRCODESCAN} component={QRCodeScreen} />
       <StackNav.Screen name={ROUTES.MAIN} component={MainNavigator} />
+      <StackNav.Screen name={ROUTES.BIOMETRIC} component={Biometric} />
     </StackNav.Navigator>
   );
 };
