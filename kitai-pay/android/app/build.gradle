@@ -286,6 +286,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation project(':react-native-blur')
 }
 
 if (isNewArchitectureEnabled()) {
