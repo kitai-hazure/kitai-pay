@@ -58,6 +58,10 @@ contract KitaiPay {
     function checkTokenAmounts(
         TokenDetails[] memory tokenDetails
     ) internal pure returns (bool) {
+        if (tokenDetails.length == 0) revert KitaiPay__EmptyTokenArray();
+        TokenDetails memory ethDetails = tokenDetails[0];
+        if (ethDetails.tokenAddress != address(0))
+            revert KitaiPay__InvalidInput();
         for (uint256 i = 0; i < tokenDetails.length; i++) {
             TokenDetails memory tokenDetail = tokenDetails[i];
             uint256 totalTokenSent = 0;
@@ -75,35 +79,14 @@ contract KitaiPay {
         return true;
     }
 
-    function checkEthAmounts(
-        TokenDetails[] memory tokenDetails
-    ) internal pure returns (bool) {
-        if (tokenDetails.length == 0) revert KitaiPay__EmptyTokenArray();
-        TokenDetails memory tokenDetail = tokenDetails[0];
-        if (tokenDetail.tokenAddress != address(0))
-            revert KitaiPay__InvalidInput();
-        uint256 totalEthSent = 0;
-        uint256 totalEthReceived = 0;
-        for (uint256 j = 0; j < tokenDetail.senders.length; j++) {
-            totalEthSent += tokenDetail.senders[j].amount;
-        }
-        for (uint256 j = 0; j < tokenDetail.receivers.length; j++) {
-            totalEthReceived += tokenDetail.receivers[j].amount;
-        }
-        return totalEthSent == totalEthReceived;
-    }
-
     function createPayment(
         TokenDetails[] memory tokenDetails,
         string memory description
     ) public payable {
-        if (!checkEthAmounts(tokenDetails))
-            revert KitaiPay__EthAmountMismatch();
-
-        // TODO: Check if user's share was sent along with the transaction
-
         if (!checkTokenAmounts(tokenDetails))
             revert KitaiPay__TokenAmountMismatch();
+
+        // TODO: Check if user's share was sent along with the transaction
 
         if (hasDuplicates(tokenDetails)) revert KitaiPay__InvalidInput();
 
