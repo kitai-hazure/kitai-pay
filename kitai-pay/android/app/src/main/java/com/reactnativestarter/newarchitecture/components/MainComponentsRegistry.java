@@ -1,4 +1,4 @@
-package com.reactnativestarter.newarchitecture.components;
+package com.kitaipay.mobile.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

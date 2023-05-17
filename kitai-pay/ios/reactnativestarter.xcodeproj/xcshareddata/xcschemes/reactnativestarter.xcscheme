@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "reactnativestarter.app"
-               BlueprintName = "reactnativestarter"
-               ReferencedContainer = "container:reactnativestarter.xcodeproj">
+               BuildableName = "kitaipay.app"
+               BlueprintName = "kitaipay"
+               ReferencedContainer = "container:kitaipay.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -37,9 +37,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "reactnativestarter.app"
-            BlueprintName = "reactnativestarter"
-            ReferencedContainer = "container:reactnativestarter.xcodeproj">
+            BuildableName = "kitaipay.app"
+            BlueprintName = "kitaipay"
+            ReferencedContainer = "container:kitaipay.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -54,9 +54,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "reactnativestarter.app"
-            BlueprintName = "reactnativestarter"
-            ReferencedContainer = "container:reactnativestarter.xcodeproj">
+            BuildableName = "kitaipay.app"
+            BlueprintName = "kitaipay"
+            ReferencedContainer = "container:kitaipay.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

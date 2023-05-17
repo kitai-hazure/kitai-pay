@@ -11,8 +11,19 @@ import { AppInner } from './src/navigation';
 import { StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from './src/redux';
+import {
+  requestUserPermission,
+  createNotificationListeners,
+  getFCMToken,
+} from './src/components/Notification';
 
 const App = () => {
+  requestUserPermission();
+  createNotificationListeners(() => {
+    // console.log('Notification in foreground', remoteMessage);
+  });
+  getFCMToken();
+  // }, []);
   return (
     <Provider store={store}>
       <ThirdwebProvider
