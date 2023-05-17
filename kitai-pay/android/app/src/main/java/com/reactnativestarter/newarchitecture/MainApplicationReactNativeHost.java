@@ -1,4 +1,4 @@
-package com.reactnativestarter.newarchitecture;
+package com.kitaipay.mobile.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.reactnativestarter.BuildConfig;
-import com.reactnativestarter.newarchitecture.components.MainComponentsRegistry;
-import com.reactnativestarter.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.kitaipay.mobile.BuildConfig;
+import com.kitaipay.mobile.newarchitecture.components.MainComponentsRegistry;
+import com.kitaipay.mobile.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

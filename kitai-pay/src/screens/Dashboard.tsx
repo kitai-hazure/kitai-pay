@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassmorphismView from '../components/GlassmorphismView';
 import { useAddress } from '@thirdweb-dev/react-native';
 import { shortenedAddress } from '../helpers';
+import { handleNotification } from '../components/Notification';
 
 const Dashboard = () => {
   const address = useAddress();
@@ -27,10 +28,14 @@ const Dashboard = () => {
             <View style={styles.introRowLeft}>
               <Text style={styles.introRowLeftText}>Hello, {shortAddress}</Text>
             </View>
-            <View style={styles.introRowRight}></View>
+            <View style={styles.introRowRight} />
           </View>
         </View>
       </GlassmorphismView>
+      <Button
+        title="NOTIFY ME"
+        onPress={() => handleNotification('TITLE', 'HEYLOO')}
+      />
       {/* </LinearGradient> */}
     </View>
   );

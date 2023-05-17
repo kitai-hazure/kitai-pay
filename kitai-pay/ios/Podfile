@@ -7,7 +7,7 @@ install! 'cocoapods', :deterministic_uuids => false
 
 production = ENV["PRODUCTION"] == "1"
 
-target 'reactnativestarter' do
+target 'kitaipay' do
   use_expo_modules!
   post_integrate do |installer|
     begin

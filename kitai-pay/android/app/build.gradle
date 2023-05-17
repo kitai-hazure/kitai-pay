@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -135,7 +136,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.reactnativestarter"
+        applicationId "com.kitaipay.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -159,7 +160,7 @@ android {
                     cppFlags "-std=c++17"
                     // Make sure this target name is the same you specify inside the
                     // src/main/jni/Android.mk file for the `LOCAL_MODULE` variable.
-                    targets "reactnativestarter_appmodules"
+                    targets "kitaipay_appmodules"
                 }
             }
             if (!enableSeparateBuildPerCPUArchitecture) {
@@ -286,7 +287,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
+    implementation project(':react-native-push-notification')
+    implementation 'com.google.firebase:firebase-analytics:17.3.0'
+    
     implementation project(':react-native-blur')
 }
 

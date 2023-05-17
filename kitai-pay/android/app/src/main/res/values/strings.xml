@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">reactnativestarter</string>
+    <string name="app_name">KitaiPay</string>
+    <string name="default_notification_channel_id" translatable="false">kitaihazurekitaipay</string>
 </resources>
