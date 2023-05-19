@@ -18,6 +18,7 @@ const StackNav = createStackNavigator<AppNavigatorParamList>();
 const AppNavigator = () => {
   const authState = useSelector(selectAuthState);
   const initialRoute = getInitialRoute(authState);
+  console.log('initialRoute', initialRoute);
 
   return (
     <StackNav.Navigator

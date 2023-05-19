@@ -2,14 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input LoginInput {
-  address: String!
-}
-
-type Mutation {
-  login(input: LoginInput!): String!
-}
-
 type Query {
   getPro: String!
 }

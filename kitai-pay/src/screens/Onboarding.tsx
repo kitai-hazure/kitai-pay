@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, Text, View, Animated } from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
-import { DEVICE_WIDTH, DEVICE_HEIGHT, ROUTES } from '../constants';
+import { DEVICE_WIDTH, DEVICE_HEIGHT, ROUTES, STORAGE } from '../constants';
 import {
   ConnectWallet,
   useAddress,
@@ -10,6 +10,9 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AppNavigatorParamList } from '../navigation';
 import { navigateWithReset } from '../helpers';
+import { useDispatch } from 'react-redux';
+import { setAddress, setID, setToken } from '../redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DOT_SIZE = 10;
 
@@ -38,29 +41,66 @@ interface OnboardingProps {
   navigation: StackNavigationProp<AppNavigatorParamList>;
 }
 
+interface CustomUseLogin {
+  login: (options: any) => Promise<void>;
+  response?: Response;
+  isLoading: boolean;
+}
+
 const Onboarding = ({ navigation }: OnboardingProps) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollListRef = useRef<FlatList>(null);
-  const { isLoading, login } = useLogin();
-
+  const { login, response } = useLogin() as CustomUseLogin;
   const address = useAddress();
+  const dispatch = useDispatch();
+
+  const setUpLogin = useCallback(
+    async (data: any) => {
+      console.log('data', data);
+      if (data?.address && data?.token && data?._id) {
+        dispatch(setAddress(data.address));
+        dispatch(setToken(data.token));
+        dispatch(setID(data._id));
+        await AsyncStorage.multiSet([
+          [STORAGE.USER_ADDRESS, data.address],
+          [STORAGE.USER_TOKEN, data.token],
+          [STORAGE.USER_ID, data._id],
+        ]);
+        navigateWithReset({ navigation, routeName: ROUTES.BIOMETRIC });
+      }
+    },
+    [dispatch, navigation],
+  );
+
+  const tryLogin = useCallback(async () => {
+    if (address) {
+      try {
+        console.log('Try Login Function is called');
+        await login({ statement: 'Login to Kitai Pay app' });
+      } catch (error) {
+        console.log('error', error);
+        // TODO: show bottom sheet and ask user to try login again in 3 seconds
+        tryLogin();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
 
   useEffect(() => {
     (async () => {
-      console.log('Checking if logged in');
-      console.log('Address: ', address);
-      if (address) {
-        console.log('User logged in: ', address);
-        console.log('Navigating to main');
-        const token = await login({
-          domain: 'http://192.168.1.159:8080',
-          authUrl: '/api/login',
-        });
-        console.log('Token: ', token);
-        navigateWithReset({ navigation, routeName: ROUTES.MAIN });
+      console.log('This useEffect is called');
+      await tryLogin();
+    })();
+  }, [address, navigation, tryLogin]);
+
+  useEffect(() => {
+    (async () => {
+      if (response !== undefined) {
+        const data = await response.json();
+        await setUpLogin(data);
       }
     })();
-  }, [address, navigation, login]);
+  }, [response, setUpLogin]);
 
   return (
     <>

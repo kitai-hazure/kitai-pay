@@ -12,8 +12,8 @@ import { AppService } from "./app.service";
 import { AppController } from "./app.controller";
 import { ProModule } from "./pro/pro.module";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
-import { AuthModule } from "./auth/auth.module";
 import { ENV } from "./constants";
+import { ThirdwebModule } from "./thirdweb/thirdweb.module";
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { ENV } from "./constants";
     }),
     MongooseModule.forRoot(ENV.MONGODB_URL),
     ProModule,
-    AuthModule,
+    ThirdwebModule,
   ],
   controllers: [AppController],
   providers: [

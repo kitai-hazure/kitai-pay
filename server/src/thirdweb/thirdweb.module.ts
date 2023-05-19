@@ -1,16 +1,17 @@
 import { Module } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { AuthResolver } from "./auth.resolver";
+import { ThirdwebService } from "./thirdweb.service";
+import { ThirdwebController } from "./thirdweb.controller";
 import { MongooseModule } from "@nestjs/mongoose";
-import { User, UserSchema } from "./auth.schema";
 import { JwtModule } from "@nestjs/jwt";
 import { ENV } from "src/constants";
+import { User, UserSchema } from "./user.schema";
 
 @Module({
+  controllers: [ThirdwebController],
+  providers: [ThirdwebService],
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.register({ secret: ENV.JWT_SECRET }),
   ],
-  providers: [AuthResolver, AuthService],
 })
-export class AuthModule {}
+export class ThirdwebModule {}

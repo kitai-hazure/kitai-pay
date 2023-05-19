@@ -6,6 +6,9 @@ export interface AuthState {
   biometricLoggedIn: boolean;
   biometricEnabled: boolean;
   isFirstLaunch: boolean;
+  address: string;
+  token: string;
+  _id: string;
 }
 
 const initialState: AuthState = {
@@ -14,6 +17,9 @@ const initialState: AuthState = {
   biometricLoggedIn: false,
   biometricEnabled: true,
   isFirstLaunch: false,
+  address: '',
+  token: '',
+  _id: '',
 };
 
 export const authSlice = createSlice({
@@ -35,6 +41,15 @@ export const authSlice = createSlice({
     setIsFirstLaunch: (state, action: PayloadAction<boolean>) => {
       state.isFirstLaunch = action.payload;
     },
+    setAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
+    },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
+    setID: (state, action: PayloadAction<string>) => {
+      state._id = action.payload;
+    },
   },
 });
 
@@ -44,6 +59,9 @@ export const {
   setBiometricLoggedIn,
   setBiometricEnabled,
   setIsFirstLaunch,
+  setAddress,
+  setToken,
+  setID,
 } = authSlice.actions;
 
 export const selectAuthState = (state: { auth: AuthState }) => state.auth;

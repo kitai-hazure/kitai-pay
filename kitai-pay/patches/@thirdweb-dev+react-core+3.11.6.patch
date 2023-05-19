@@ -1,0 +1,25 @@
+diff --git a/node_modules/@thirdweb-dev/react-core/dist/useTransactions-9e6e40eb.cjs.dev.js b/node_modules/@thirdweb-dev/react-core/dist/useTransactions-9e6e40eb.cjs.dev.js
+index 8136828..38b475c 100644
+--- a/node_modules/@thirdweb-dev/react-core/dist/useTransactions-9e6e40eb.cjs.dev.js
++++ b/node_modules/@thirdweb-dev/react-core/dist/useTransactions-9e6e40eb.cjs.dev.js
+@@ -4899,16 +4899,18 @@ function useLogin() {
+         throw new Error(`Login request failed with status code ${res.status}`);
+       }
+       queryClient.invalidateQueries(cacheKeys.auth.user());
++      return res;
+     }
+   });
+   return {
+     login: options => login.mutateAsync(options),
+-    isLoading: login.isLoading
++    isLoading: login.isLoading,
++    response: login.data,
+   };
+ }
+ 
+ // login function extracted directly from auth
+-const isBrowser = () => typeof window !== "undefined";
++const isBrowser = () => false;
+ async function doLogin(wallet, options) {
+   let chainId = options?.chainId;
+   if (!chainId && wallet.getChainId) {

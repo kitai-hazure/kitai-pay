@@ -14,9 +14,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @Post("/login")
-  async login(): Promise<string> {
-    return await this.appService.login();
-  }
 }

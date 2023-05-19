@@ -17,6 +17,7 @@ import {
   getFCMToken,
 } from './src/components/Notification';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { API } from './src/constants';
 
 const App = () => {
   requestUserPermission();
@@ -24,15 +25,21 @@ const App = () => {
     // console.log('Notification in foreground', remoteMessage);
   });
   getFCMToken();
-  // }, []);
+
+  const client = new QueryClient();
 
   return (
     <Provider store={store}>
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={client}>
         <ThirdwebProvider
           theme="dark"
           activeChain="polygon"
-          supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}>
+          supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}
+          authConfig={{
+            domain: API.BASE_URL,
+            authUrl: API.THIRDWEB_LOGIN,
+          }}
+          queryClient={client as any}>
           <NavigationContainer>
             <GestureHandlerRootView style={styles.fullScreen}>
               <AppInner />
