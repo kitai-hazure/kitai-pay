@@ -34,7 +34,7 @@ const useStart = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setTimeout(() => setShowSplash(false), 1000);
+    setTimeout(() => setShowSplash(false), 5000);
   }, []);
 
   return { showSplash };

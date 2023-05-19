@@ -16,6 +16,7 @@ import {
   createNotificationListeners,
   getFCMToken,
 } from './src/components/Notification';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const App = () => {
   requestUserPermission();
@@ -24,18 +25,21 @@ const App = () => {
   });
   getFCMToken();
   // }, []);
+
   return (
     <Provider store={store}>
-      <ThirdwebProvider
-        theme="dark"
-        activeChain="polygon"
-        supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}>
-        <NavigationContainer>
-          <GestureHandlerRootView style={styles.fullScreen}>
-            <AppInner />
-          </GestureHandlerRootView>
-        </NavigationContainer>
-      </ThirdwebProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <ThirdwebProvider
+          theme="dark"
+          activeChain="polygon"
+          supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}>
+          <NavigationContainer>
+            <GestureHandlerRootView style={styles.fullScreen}>
+              <AppInner />
+            </GestureHandlerRootView>
+          </NavigationContainer>
+        </ThirdwebProvider>
+      </QueryClientProvider>
     </Provider>
   );
 };

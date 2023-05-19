@@ -12,31 +12,42 @@ const Dashboard = () => {
 
   return (
     <View style={styles.container}>
-      {/* <LinearGradient
+      <LinearGradient
         start={{ x: 0, y: 0 }}
         // end={{ x: 1, y: 1 }}
         // colors={['#080200', '#270103', '#670d30', '#ce083d']}
         end={{ x: 1, y: 1 }}
-        colors={['#000000', '#111111', '#222222', '#111111', '#000000']}
-        style={styles.container}> */}
-      <GlassmorphismView
-        containerStyle={styles.glassContainer}
-        blurAmount={20}
-        blurType="light">
-        <View style={styles.introContainer}>
-          <View style={styles.introRow}>
-            <View style={styles.introRowLeft}>
-              <Text style={styles.introRowLeftText}>Hello, {shortAddress}</Text>
+        colors={[
+          '#000000',
+          '#111111',
+          '#111111',
+          '#222222',
+          '#111111',
+          '#111111',
+          '#000000',
+        ]}
+        style={styles.container}>
+        <GlassmorphismView
+          containerStyle={styles.glassContainer}
+          blurAmount={20}
+          blurType="light">
+          <View style={styles.introContainer}>
+            <View style={styles.introRow}>
+              <View style={styles.introRowLeft}>
+                <Text style={styles.introRowLeftText}>
+                  Hello, {shortAddress}
+                </Text>
+              </View>
+              <View style={styles.introRowRight}></View>
             </View>
             <View style={styles.introRowRight} />
           </View>
-        </View>
-      </GlassmorphismView>
-      <Button
-        title="NOTIFY ME"
-        onPress={() => handleNotification('TITLE', 'HEYLOO')}
-      />
-      {/* </LinearGradient> */}
+        </GlassmorphismView>
+        <Button
+          title="NOTIFY ME"
+          onPress={() => handleNotification('TITLE', 'HEYLOO')}
+        />
+      </LinearGradient>
     </View>
   );
 };

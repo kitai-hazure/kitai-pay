@@ -2,7 +2,11 @@ import { FlatList, StyleSheet, Text, View, Animated } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 
 import { DEVICE_WIDTH, DEVICE_HEIGHT, ROUTES } from '../constants';
-import { ConnectWallet, useAddress } from '@thirdweb-dev/react-native';
+import {
+  ConnectWallet,
+  useAddress,
+  useLogin,
+} from '@thirdweb-dev/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AppNavigatorParamList } from '../navigation';
 import { navigateWithReset } from '../helpers';
@@ -37,17 +41,26 @@ interface OnboardingProps {
 const Onboarding = ({ navigation }: OnboardingProps) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollListRef = useRef<FlatList>(null);
+  const { isLoading, login } = useLogin();
 
   const address = useAddress();
 
   useEffect(() => {
-    console.log('Checking if logged in');
-    if (address) {
-      console.log('User logged in: ', address);
-      console.log('Navigating to main');
-      navigateWithReset({ navigation, routeName: ROUTES.MAIN });
-    }
-  }, [address, navigation]);
+    (async () => {
+      console.log('Checking if logged in');
+      console.log('Address: ', address);
+      if (address) {
+        console.log('User logged in: ', address);
+        console.log('Navigating to main');
+        const token = await login({
+          domain: 'http://192.168.1.159:8080',
+          authUrl: '/api/login',
+        });
+        console.log('Token: ', token);
+        navigateWithReset({ navigation, routeName: ROUTES.MAIN });
+      }
+    })();
+  }, [address, navigation, login]);
 
   return (
     <>
