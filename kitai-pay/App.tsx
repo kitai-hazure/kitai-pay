@@ -18,6 +18,7 @@ import {
 } from './src/components/Notification';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { API } from './src/constants';
+import { linking } from './src/helpers';
 
 const App = () => {
   requestUserPermission();
@@ -40,7 +41,7 @@ const App = () => {
             authUrl: API.THIRDWEB_LOGIN,
           }}
           queryClient={client as any}>
-          <NavigationContainer>
+          <NavigationContainer linking={linking}>
             <GestureHandlerRootView style={styles.fullScreen}>
               <AppInner />
             </GestureHandlerRootView>

@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import PushNotification from 'react-native-push-notification';
+import PushNotification, { Importance } from 'react-native-push-notification';
+import { NOTIFICATION } from '../constants';
 
 export async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -18,20 +19,47 @@ export async function requestUserPermission() {
 (() => {
   PushNotification.createChannel(
     {
-      channelId: 'kitaihazurekitaipay', // (required)
-      channelName: 'Kitai Pay Notification', // (required)
-      channelDescription: 'Notification for KitaiPay', // (optional) default: undefined.
-      importance: 4, // (optional) default: 4. Int value of the Android notification importance
-      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+      channelId: NOTIFICATION.POPUP_CHANNEL_ID,
+      channelName: NOTIFICATION.POPUP_CHANNEL_NAME,
+      importance: Importance.HIGH,
+      vibrate: NOTIFICATION.POPUP_CHANNEL_VIBRATE,
+      soundName: 'default',
     },
-    (created: any) => console.log(`Channel Created '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    () => {},
+  );
+
+  PushNotification.createChannel(
+    {
+      channelId: NOTIFICATION.SILENT_CHANNEL_ID,
+      channelName: NOTIFICATION.SILENT_CHANNEL_NAME,
+      importance: Importance.LOW,
+      vibrate: NOTIFICATION.SILENT_CHANNEL_VIBRATE,
+    },
+    () => {},
   );
 })();
 
 export const handleNotification = (title: string, message: string) => {
   PushNotification.localNotification({
-    channelId: 'kitaihazurekitaipay',
-    title,
+    autoCancel: true,
+    smallIcon: NOTIFICATION.SMALL_ICON.KITAI_PAY_MAIN,
+    vibrate: true,
+    group: NOTIFICATION.GROUP_NAME.KITAI_PAY_MAIN,
+    channelId: NOTIFICATION.POPUP_CHANNEL_ID,
+    title: title,
+    message: message,
+    playSound: true,
+    soundName: NOTIFICATION.SOUND_NAME.DEFAULT,
+    number: NOTIFICATION.NUMBER.KITAI_PAY_MAIN,
+  });
+
+  PushNotification.localNotification({
+    autoCancel: true,
+    groupSummary: true,
+    smallIcon: NOTIFICATION.SMALL_ICON.KITAI_PAY_MAIN,
+    group: NOTIFICATION.GROUP_NAME.KITAI_PAY_MAIN,
+    channelId: NOTIFICATION.SILENT_CHANNEL_ID,
+    id: NOTIFICATION.GROUP_ID.KITAI_PAY_MAIN,
     message,
   });
 };

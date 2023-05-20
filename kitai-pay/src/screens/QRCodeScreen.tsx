@@ -3,14 +3,28 @@ import { StyleSheet, Text, View } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import CustomBottomModalSheet from '../components/CustomBottomModalSheet';
 import WalletAddressWrapper from '../components/WalletAddressWrapper';
+import { useSecureRoute } from '../hooks';
+// import { StackNavigationProps } from 'src/helpers';
+import { StackNavigationProps } from '../helpers';
+import { MainNavigatorParamList } from '../navigation';
+import QRCodeShadow from './shadows/QRCodeShadow';
+
 interface IQRData {
   to: string;
   amount: number | null;
   token: string;
 }
-const QRCodeScreen = () => {
+
+type QRCodeScreenProps = StackNavigationProps<
+  MainNavigatorParamList,
+  'QRCODESCAN'
+>;
+
+const QRCodeScreen = ({ navigation }: QRCodeScreenProps) => {
+  const start = useSecureRoute(navigation);
   const [openSheet, setOpenSheet] = React.useState(false);
   const [qrData, setQRData] = React.useState<IQRData[]>([]);
+
   const onSuccess = (e: any) => {
     console.log('QR Code: ', e.data);
     // expect data like this
@@ -24,6 +38,10 @@ const QRCodeScreen = () => {
     setQRData(TEMP_TEST_DATA);
     setOpenSheet(true);
   };
+
+  if (!start) {
+    return <QRCodeShadow />;
+  }
 
   return !openSheet ? (
     <QRCodeScanner onRead={onSuccess} />

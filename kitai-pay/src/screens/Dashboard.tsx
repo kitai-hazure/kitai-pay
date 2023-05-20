@@ -2,13 +2,24 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassmorphismView from '../components/GlassmorphismView';
-import { useAddress } from '@thirdweb-dev/react-native';
-import { shortenedAddress } from '../helpers';
+import { StackNavigationProps, shortenedAddress } from '../helpers';
 import { handleNotification } from '../components/Notification';
+import { MainNavigatorParamList } from '../navigation';
+import useSecureRoute from '../hooks/useSecureRoute';
+import { useSelector } from 'react-redux';
+import { selectAuthState } from '../redux';
+import DashboardShadow from './shadows/DashboardShadow';
 
-const Dashboard = () => {
-  const address = useAddress();
-  const shortAddress = shortenedAddress(address!);
+type DashboardProps = StackNavigationProps<MainNavigatorParamList, 'DASHBOARD'>;
+
+const Dashboard = ({ navigation }: DashboardProps) => {
+  const start = useSecureRoute(navigation);
+  const { address } = useSelector(selectAuthState);
+  const shortAddress = shortenedAddress(address);
+
+  if (!start) {
+    return <DashboardShadow />;
+  }
 
   return (
     <View style={styles.container}>

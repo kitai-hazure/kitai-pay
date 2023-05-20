@@ -1,6 +1,16 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import React, { useCallback, useEffect } from 'react';
-import { loginBiometric, navigateWithReset } from '../helpers';
+import {
+  StackNavigationProps,
+  loginBiometric,
+  navigateWithReset,
+} from '../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectAuthState,
@@ -9,14 +19,12 @@ import {
 } from '../redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ROUTES, STORAGE } from '../constants';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { AppNavigatorParamList } from '../navigation';
 
-interface BiometricProps {
-  navigation: StackNavigationProp<AppNavigatorParamList>;
-}
+type BiometricProps = StackNavigationProps<AppNavigatorParamList, 'BIOMETRIC'>;
 
-const Biometric = ({ navigation }: BiometricProps) => {
+const Biometric = ({ navigation, route }: BiometricProps) => {
+  const url = route.params.url;
   const dispatch = useDispatch();
   const { isFirstLaunch } = useSelector(selectAuthState);
 
@@ -24,9 +32,17 @@ const Biometric = ({ navigation }: BiometricProps) => {
     const biometricResult = await loginBiometric();
     if (biometricResult) {
       dispatch(setBiometricLoggedIn(true));
-      navigateWithReset({ navigation, routeName: ROUTES.MAIN });
+      if (url !== undefined) {
+        try {
+          await Linking.openURL(url);
+        } catch (error) {
+          navigateWithReset({ navigation, routeName: ROUTES.MAIN });
+        }
+      } else {
+        navigateWithReset({ navigation, routeName: ROUTES.MAIN });
+      }
     }
-  }, [dispatch, navigation]);
+  }, [dispatch, navigation, url]);
 
   const skipBiometrics = useCallback(async () => {
     dispatch(setBiometricEnabled(false));
