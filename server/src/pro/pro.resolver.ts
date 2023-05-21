@@ -1,5 +1,5 @@
 import { Inject, UseInterceptors } from "@nestjs/common";
-import { Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Cache } from "cache-manager";
 import { ProService } from "./pro.service";
 import {
@@ -23,5 +23,13 @@ export class ProResolver {
   @Query(() => String)
   async getPro(): Promise<string> {
     return this.proService.getPro();
+  }
+
+  @Mutation(() => String)
+  async setPro(
+    @Args("setProInput")
+    setProInput: string
+  ): Promise<string> {
+    return this.proService.setPro(setProInput);
   }
 }
