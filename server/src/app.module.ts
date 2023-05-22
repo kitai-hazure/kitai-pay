@@ -14,6 +14,7 @@ import { ProModule } from "./pro/pro.module";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
 import { ENV } from "./constants";
 import { ThirdwebModule } from "./thirdweb/thirdweb.module";
+import { NotificationModule } from "./notification/notification.module";
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ThirdwebModule } from "./thirdweb/thirdweb.module";
     MongooseModule.forRoot(ENV.MONGODB_URL),
     ProModule,
     ThirdwebModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

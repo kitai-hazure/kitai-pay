@@ -9,4 +9,8 @@ export class ProService {
     const index = Math.floor(Math.random() * 3);
     return pros[index];
   }
+
+  setPro(setProInput: string): string {
+    return setProInput;
+  }
 }
