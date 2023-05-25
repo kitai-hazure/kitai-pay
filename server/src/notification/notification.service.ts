@@ -16,7 +16,7 @@ export class NotificationService {
         fcmToken,
       });
 
-      return "Notification sent successfully";
+      return "Notification sent successfully to the users";
     } catch (err) {
       return err.toString();
     }
