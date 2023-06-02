@@ -88,31 +88,34 @@ contract KitaiPay {
     function ensureHashValidity(
         uint256 paymentId,
         CreatePaymentInput memory input
-    ) public view {
+    ) public view returns (bytes32) {
         bytes32 generatedHash = keccak256(abi.encodePacked(paymentId));
+
         for (uint256 i = 0; i < input.senders.length; i++) {
+            generatedHash = keccak256(abi.encodePacked(generatedHash));
+            generatedHash = keccak256(abi.encodePacked(input.senders[i].user));
+            generatedHash = keccak256(abi.encodePacked(input.senders[i].token));
             generatedHash = keccak256(
-                abi.encodePacked(
-                    generatedHash,
-                    input.senders[i].user,
-                    input.senders[i].token,
-                    input.senders[i].amount
-                )
+                abi.encodePacked(input.senders[i].amount)
             );
         }
         for (uint256 i = 0; i < input.receivers.length; i++) {
+            generatedHash = keccak256(abi.encodePacked(generatedHash));
             generatedHash = keccak256(
-                abi.encodePacked(
-                    generatedHash,
-                    input.receivers[i].user,
-                    input.receivers[i].token,
-                    input.receivers[i].amount
-                )
+                abi.encodePacked(input.receivers[i].user)
+            );
+            generatedHash = keccak256(
+                abi.encodePacked(input.receivers[i].token)
+            );
+            generatedHash = keccak256(
+                abi.encodePacked(input.receivers[i].amount)
             );
         }
         if (generatedHash != _paymentSignature[paymentId]) {
             revert KitaiPay__InvalidSignature();
         }
+
+        return generatedHash;
     }
 
     /*
@@ -142,6 +145,15 @@ contract KitaiPay {
         if (_paymentSenders[paymentId].length == 0) {
             revert KitaiPay__InvalidPaymentId();
         }
+        if (_payments[paymentId].completed) {
+            revert KitaiPay__PaymentAlreadyCompleted();
+        }
+        if (_payments[paymentId].cancelled) {
+            revert KitaiPay__PaymentAlreadyCancelled();
+        }
+    }
+
+    function ensureIsValidPaymentAddSignature(uint256 paymentId) internal view {
         if (_payments[paymentId].completed) {
             revert KitaiPay__PaymentAlreadyCompleted();
         }
@@ -368,7 +380,7 @@ contract KitaiPay {
      * @param signature The signature.
      */
     function addPaymentSignature(uint256 paymentId, bytes32 signature) public {
-        ensureIsValidPayment(paymentId);
+        ensureIsValidPaymentAddSignature(paymentId);
         ensureIsOwner();
 
         if (_paymentSignature[paymentId] != 0x0) {
@@ -376,5 +388,22 @@ contract KitaiPay {
         }
 
         _paymentSignature[paymentId] = signature;
+    }
+
+    // TEST FUNCTIONS
+    function deploytestname() public pure returns (string memory) {
+        return "KitaiPay";
+    }
+
+    function getPaymentSignature(
+        uint256 paymentID
+    ) public view returns (bytes32) {
+        return _paymentSignature[paymentID];
+    }
+
+    function getPaymentDescription(
+        uint256 paymentID
+    ) public view returns (string memory) {
+        return _payments[paymentID].description;
     }
 }
