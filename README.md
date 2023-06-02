@@ -1,2 +1,2 @@
 # kitai-pay
-Decentralized Payment Splitting solution
+Decentralized Payment Splitting solution.
