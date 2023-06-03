@@ -90,8 +90,6 @@ describe("KitaiPay", function () {
     KITAI_PAY = await KitaiPay.deploy();
     await KITAI_PAY.deployed();
     console.log("KitaiPay deployed to:", KITAI_PAY.address);
-    expect(await KITAI_PAY.deploytestname()).to.equal("KitaiPay");
-
     [OWNER, ...OTHER_ACCOUNT] = await ethers.getSigners();
   });
 
@@ -106,10 +104,6 @@ describe("KitaiPay", function () {
 
       var WRONG_PAYMENT: any = PAYMENT;
       WRONG_PAYMENT["senders"][0]["amount"] = 100;
-
-      expect(await KITAI_PAY.getPaymentSignature(PAYMENT_ID)).to.equal(
-        SIGNATURE
-      );
 
       expect(await KITAI_PAY.ensureHashValidity(PAYMENT_ID, PAYMENT)).to.not.be
         .reverted;
@@ -127,10 +121,6 @@ describe("KitaiPay", function () {
       const SIGNATURE = GET_SIGNATURE(PAYMENT, PAYMENT_ID);
 
       await KITAI_PAY.addPaymentSignature(PAYMENT_ID, SIGNATURE);
-
-      expect(await KITAI_PAY.getPaymentSignature(PAYMENT_ID)).to.equal(
-        SIGNATURE
-      );
     });
 
     it("Should create a payment", async () => {
@@ -141,9 +131,6 @@ describe("KitaiPay", function () {
 
       await KITAI_PAY.addPaymentSignature(PAYMENT_ID, SIGNATURE);
 
-      expect(await KITAI_PAY.getPaymentSignature(PAYMENT_ID)).to.equal(
-        SIGNATURE
-      );
       const PAYMENT_DESCRIPTION = "THIS IS A TEST PAYMENT";
       await KITAI_PAY.createPayment(
         PAYMENT_ID,
@@ -151,9 +138,12 @@ describe("KitaiPay", function () {
         PAYMENT_DESCRIPTION,
         false // owner is sending 1 ETH according to the payment
       );
-      expect(await KITAI_PAY.getPaymentDescription(PAYMENT_ID)).to.equal(
-        PAYMENT_DESCRIPTION
-      );
+      const payment = await KITAI_PAY.getPaymentDetails(PAYMENT_ID);
+      expect(payment.length).to.equal(6);
+      expect(payment.owner).to.equal(OWNER.address);
+      expect(payment.description).to.equal(PAYMENT_DESCRIPTION);
+      expect(payment.completed).to.equal(false);
+      expect(payment.cancelled).to.equal(false);
     });
   });
 });

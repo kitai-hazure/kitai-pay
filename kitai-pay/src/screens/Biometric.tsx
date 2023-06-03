@@ -18,8 +18,9 @@ import {
   setBiometricLoggedIn,
 } from '../redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ROUTES, STORAGE } from '../constants';
+import { COLORS, ROUTES, STORAGE } from '../constants';
 import { AppNavigatorParamList } from '../navigation';
+import AnimatedLottieView from 'lottie-react-native';
 
 type BiometricProps = StackNavigationProps<AppNavigatorParamList, 'BIOMETRIC'>;
 
@@ -56,14 +57,19 @@ const Biometric = ({ navigation, route }: BiometricProps) => {
 
   return (
     <View style={styles.fullScreen}>
-      {/* TODO: Add some lottie animation here */}
-      <Text>Biometric Screen</Text>
-      <TouchableOpacity onPress={biometricHandler}>
-        <Text>Biometric Login</Text>
+      <Text style={styles.title}>Biometric/Password Login</Text>
+      <AnimatedLottieView
+        source={require('../assets/animations/biometric.json')}
+        autoPlay
+        loop
+        style={styles.lottie}
+      />
+      <TouchableOpacity onPress={biometricHandler} style={styles.button}>
+        <Text style={styles.buttonText}>Biometric Login</Text>
       </TouchableOpacity>
       {isFirstLaunch && (
-        <TouchableOpacity onPress={skipBiometrics}>
-          <Text>Disable Biometrics</Text>
+        <TouchableOpacity onPress={skipBiometrics} style={styles.button}>
+          <Text style={styles.buttonText}>Disable Biometrics</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -73,5 +79,36 @@ const Biometric = ({ navigation, route }: BiometricProps) => {
 export default Biometric;
 
 const styles = StyleSheet.create({
-  fullScreen: { flex: 1 },
+  fullScreen: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  button: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.LIGHT_GREY,
+    borderRadius: 16,
+    height: 50,
+    marginHorizontal: 60,
+    marginTop: 20,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.WHITE,
+  },
+  title: {
+    marginTop: 40,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: COLORS.WHITE,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  lottie: {
+    width: 500,
+    height: 500,
+    alignSelf: 'center',
+  },
 });

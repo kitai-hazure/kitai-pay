@@ -88,7 +88,7 @@ contract KitaiPay {
     function ensureHashValidity(
         uint256 paymentId,
         CreatePaymentInput memory input
-    ) public view returns (bytes32) {
+    ) public view {
         bytes32 generatedHash = keccak256(abi.encodePacked(paymentId));
 
         for (uint256 i = 0; i < input.senders.length; i++) {
@@ -114,8 +114,6 @@ contract KitaiPay {
         if (generatedHash != _paymentSignature[paymentId]) {
             revert KitaiPay__InvalidSignature();
         }
-
-        return generatedHash;
     }
 
     /*
@@ -390,20 +388,76 @@ contract KitaiPay {
         _paymentSignature[paymentId] = signature;
     }
 
-    // TEST FUNCTIONS
-    function deploytestname() public pure returns (string memory) {
-        return "KitaiPay";
+    /*
+     * @dev Gets the payment details.
+     * @param paymentId The payment id.
+     */
+
+    function getPaymentDetails(
+        uint256 paymentId
+    ) public view returns (Payment memory) {
+        ensureIsValidPayment(paymentId);
+        return _payments[paymentId];
     }
 
-    function getPaymentSignature(
-        uint256 paymentID
-    ) public view returns (bytes32) {
-        return _paymentSignature[paymentID];
+    /*
+     * @dev Gets the payment senders.
+     * @param paymentId The payment id.
+     */
+    function getPaymentSenders(
+        uint256 paymentId
+    ) public view returns (address[] memory) {
+        ensureIsValidPayment(paymentId);
+        return _paymentSenders[paymentId];
     }
 
-    function getPaymentDescription(
-        uint256 paymentID
-    ) public view returns (string memory) {
-        return _payments[paymentID].description;
+    /*
+     * @dev Gets the payment receivers.
+     * @param paymentId The payment id.
+     */
+    function getPaymentReceivers(
+        uint256 paymentId
+    ) public view returns (address[] memory) {
+        ensureIsValidPayment(paymentId);
+        return _paymentReceivers[paymentId];
+    }
+
+    /*
+     * @dev Gets the payment sender items.
+     * @param paymentId The payment id.
+     * @param sender The sender.
+     */
+    function getPaymentSenderItems(
+        uint256 paymentId,
+        address sender
+    ) public view returns (PaymentItem[] memory) {
+        ensureIsValidPayment(paymentId);
+        return _paymentSenderItems[paymentId][sender];
+    }
+
+    /*
+     * @dev Gets the payment receiver items.
+     * @param paymentId The payment id.
+     * @param receiver The receiver.
+     */
+    function getPaymentReceiverItems(
+        uint256 paymentId,
+        address receiver
+    ) public view returns (PaymentItem[] memory) {
+        ensureIsValidPayment(paymentId);
+        return _paymentReceiverItems[paymentId][receiver];
+    }
+
+    /*
+     * @dev Gets the payment sender status.
+     * @param paymentId The payment id.
+     * @param sender The sender.
+     */
+    function getPaymentSenderStatus(
+        uint256 paymentId,
+        address sender
+    ) public view returns (bool) {
+        ensureIsValidPayment(paymentId);
+        return _paymentSenderStatuses[paymentId][sender];
     }
 }

@@ -78,17 +78,11 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(_, index) => index.toString()}
         data={[
-          <PaymentInput
-            data={senderDetails}
-            onSubmit={slideToMiddle}
-            setData={setSenderDetails}
-            title="Sender's Details"
-          />,
           <>
             <View style={styles.centerContainer}>
               <Text style={styles.title}>Creating New Payment</Text>
               <TouchableOpacity
-                onPress={slideToFront}
+                onPress={slideToMiddle}
                 style={styles.buttonSmall}>
                 <Text style={styles.buttonText}>Edit Sender Details</Text>
               </TouchableOpacity>
@@ -110,8 +104,14 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
             />
           </>,
           <PaymentInput
+            data={senderDetails}
+            onSubmit={slideToFront}
+            setData={setSenderDetails}
+            title="Sender's Details"
+          />,
+          <PaymentInput
             data={receiverDetails}
-            onSubmit={slideToMiddle}
+            onSubmit={slideToFront}
             setData={setReceiverDetails}
             title="Receiver's Details"
           />,

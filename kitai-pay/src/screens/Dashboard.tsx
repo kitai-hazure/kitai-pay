@@ -1,7 +1,12 @@
-import { Button, StyleSheet, View } from 'react-native';
 import React from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
-import GlassmorphismView from '../components/GlassmorphismView';
+import {
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { StackNavigationProps, navigate, shortenedAddress } from '../helpers';
 import { handleNotification } from '../components/Notification';
 import { MainNavigatorParamList } from '../navigation';
@@ -10,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { selectAuthState } from '../redux';
 import DashboardShadow from './shadows/DashboardShadow';
 import { ROUTES, COLORS } from '../constants';
+import AnimatedLottieView from 'lottie-react-native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 type DashboardProps = StackNavigationProps<MainNavigatorParamList, 'DASHBOARD'>;
 
@@ -22,44 +29,87 @@ const Dashboard = ({ navigation }: DashboardProps) => {
   const navigateToCreatePayment = () => {
     navigate({ navigation, routeName: ROUTES.CREATE_PAYMENT });
   };
+  const navigateToScanQRCode = () => {
+    navigate({ navigation, routeName: ROUTES.QRCODESCAN });
+  };
 
   if (!start) {
     return <DashboardShadow />;
   }
 
+  const dashboardItems = [
+    {
+      icon: 'create-outline',
+      type: 'Ionicons',
+      title: 'Create Payment',
+      onClick: () => navigateToCreatePayment(),
+    },
+    {
+      icon: 'qr-code-outline',
+      type: 'Ionicons',
+      title: 'Scan QR Code',
+      onClick: () => navigateToScanQRCode(),
+    },
+    {
+      icon: 'image-outline',
+      type: 'Ionicons',
+      title: 'My NFTs',
+      onClick: () => {},
+    },
+    {
+      icon: 'history',
+      type: 'FontAwesome5',
+      title: 'Payment History',
+      onClick: () => {},
+    },
+    {
+      icon: 'settings-outline',
+      type: 'Ionicons',
+      title: 'Settings',
+      onClick: () => {},
+    },
+    {
+      icon: 'money-check',
+      type: 'FontAwesome5',
+      title: 'My Assets',
+      onClick: () => {},
+    },
+  ];
+
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        // end={{ x: 1, y: 1 }}
-        // colors={['#080200', '#270103', '#670d30', '#ce083d']}
-        end={{ x: 1, y: 1 }}
-        colors={[
-          '#000000',
-          '#111111',
-          '#111111',
-          '#222222',
-          '#111111',
-          '#111111',
-          '#000000',
-        ]}
-        style={styles.container}>
-        <GlassmorphismView
-          containerStyle={styles.glassContainer}
-          blurAmount={20}
-          blurType="light">
-          <View style={styles.introContainer} />
-        </GlassmorphismView>
-        <Button
-          title="NOTIFY ME"
-          onPress={() => handleNotification('TITLE', 'HEYLOO')}
+    <ScrollView style={styles.container}>
+      <View style={styles.cardContainer}>
+        <AnimatedLottieView
+          source={require('../assets/animations/avatar.json')}
+          autoPlay
+          loop
+          style={styles.avatarLottie}
         />
-        <Button
-          title="Create Payment"
-          onPress={() => navigateToCreatePayment()}
-        />
-      </LinearGradient>
-    </View>
+        <View>
+          <Text style={styles.welcomeText}>Welcome</Text>
+          <Text style={styles.accountAddress}>{shortAddress}</Text>
+        </View>
+      </View>
+      <View style={styles.iconWrapper}>
+        {dashboardItems.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.iconContainer}
+            onPress={item.onClick}>
+            {item.type === 'Ionicons' ? (
+              <Ionicons name={item.icon as any} size={30} color="white" />
+            ) : (
+              <FontAwesome5 name={item.icon} size={30} color="white" />
+            )}
+            <Text style={styles.iconText}>{item.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <Button
+        title="NOTIFY ME"
+        onPress={() => handleNotification('TITLE', 'HEYLOO')}
+      />
+    </ScrollView>
   );
 };
 
@@ -70,31 +120,67 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
   },
-  glassContainer: {
-    marginTop: 20,
-    alignSelf: 'center',
-    width: '90%',
-    height: 150,
+  cardContainer: {
+    margin: 20,
+    borderRadius: 20,
+    backgroundColor: COLORS.LIGHT_GREY,
+    shadowColor: COLORS.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  innerGlassContainer: {
+  accountAddress: {
+    fontSize: 16,
+    color: COLORS.WHITE,
+    paddingHorizontal: 20,
+  },
+  welcomeText: {
+    fontSize: 20,
+    color: COLORS.WHITE,
+    paddingHorizontal: 20,
+    marginBottom: 5,
+  },
+  avatarLottie: {
+    width: 100,
+    height: 100,
+  },
+  iconWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
+    marginTop: 20,
+  },
+  iconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 20,
+    backgroundColor: COLORS.LIGHT_GREY,
+    shadowColor: COLORS.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    height: '100%',
+    margin: 10,
+    padding: 10,
   },
-  introContainer: {
-    flex: 1,
-    margin: 20,
-  },
-  introRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  introRowLeftText: {
+  iconText: {
     color: COLORS.WHITE,
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
   },
 });

@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import AnimatedLottieView from 'lottie-react-native';
+import { COLORS } from '../constants';
 
 const Splash = () => {
   return (
@@ -19,7 +20,10 @@ const Splash = () => {
 export default Splash;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+  },
   animation: {
     flex: 1,
     width: '100%',

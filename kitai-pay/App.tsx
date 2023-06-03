@@ -17,7 +17,7 @@ import {
   getFCMToken,
 } from './src/components/Notification';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { API } from './src/constants';
+import { API, COLORS } from './src/constants';
 import { linking } from './src/helpers';
 
 const App = () => {
@@ -41,7 +41,19 @@ const App = () => {
             authUrl: API.THIRDWEB_LOGIN,
           }}
           queryClient={client as any}>
-          <NavigationContainer linking={linking}>
+          <NavigationContainer
+            linking={linking}
+            theme={{
+              dark: true,
+              colors: {
+                background: COLORS.BACKGROUND,
+                notification: COLORS.BACKGROUND,
+                primary: COLORS.BACKGROUND,
+                border: COLORS.BACKGROUND,
+                card: COLORS.BACKGROUND,
+                text: COLORS.WHITE,
+              },
+            }}>
             <GestureHandlerRootView style={styles.fullScreen}>
               <AppInner />
             </GestureHandlerRootView>
