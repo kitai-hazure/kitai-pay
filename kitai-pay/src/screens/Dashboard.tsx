@@ -1,14 +1,15 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import GlassmorphismView from '../components/GlassmorphismView';
-import { StackNavigationProps, shortenedAddress } from '../helpers';
+import { StackNavigationProps, navigate, shortenedAddress } from '../helpers';
 import { handleNotification } from '../components/Notification';
 import { MainNavigatorParamList } from '../navigation';
 import useSecureRoute from '../hooks/useSecureRoute';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../redux';
 import DashboardShadow from './shadows/DashboardShadow';
+import { ROUTES, COLORS } from '../constants';
 
 type DashboardProps = StackNavigationProps<MainNavigatorParamList, 'DASHBOARD'>;
 
@@ -16,6 +17,11 @@ const Dashboard = ({ navigation }: DashboardProps) => {
   const start = useSecureRoute(navigation);
   const { address } = useSelector(selectAuthState);
   const shortAddress = shortenedAddress(address);
+  console.log('shortAddress', shortAddress);
+
+  const navigateToCreatePayment = () => {
+    navigate({ navigation, routeName: ROUTES.CREATE_PAYMENT });
+  };
 
   if (!start) {
     return <DashboardShadow />;
@@ -42,21 +48,15 @@ const Dashboard = ({ navigation }: DashboardProps) => {
           containerStyle={styles.glassContainer}
           blurAmount={20}
           blurType="light">
-          <View style={styles.introContainer}>
-            <View style={styles.introRow}>
-              <View style={styles.introRowLeft}>
-                <Text style={styles.introRowLeftText}>
-                  Hello, {shortAddress}
-                </Text>
-              </View>
-              <View style={styles.introRowRight}></View>
-            </View>
-            <View style={styles.introRowRight} />
-          </View>
+          <View style={styles.introContainer} />
         </GlassmorphismView>
         <Button
           title="NOTIFY ME"
           onPress={() => handleNotification('TITLE', 'HEYLOO')}
+        />
+        <Button
+          title="Create Payment"
+          onPress={() => navigateToCreatePayment()}
         />
       </LinearGradient>
     </View>
@@ -68,7 +68,7 @@ export default Dashboard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: COLORS.BACKGROUND,
   },
   glassContainer: {
     marginTop: 20,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   introRowLeftText: {
-    color: 'white',
+    color: COLORS.WHITE,
     fontSize: 20,
     fontWeight: 'bold',
   },

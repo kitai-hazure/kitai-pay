@@ -1,13 +1,14 @@
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import AppNavigator from './AppNavigator';
 import React from 'react';
 import { useStart } from '../hooks';
+import { Splash } from '../screens';
 
 const AppInner = () => {
   const { showSplash } = useStart();
 
   if (showSplash) {
-    return <Text>Loading...</Text>;
+    return <Splash />;
   }
 
   return (

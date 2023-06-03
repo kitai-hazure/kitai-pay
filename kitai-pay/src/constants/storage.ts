@@ -5,14 +5,3 @@ export const STORAGE = {
   USER_ID: '@KITAI_PAY:USER_ID',
   USER_TOKEN: '@KITAI_PAY:USER_TOKEN',
 };
-
-export const TOKEN_OPTIONS = [
-  'MATIC',
-  'USDC',
-  'USDT',
-  'DAI',
-  'WBTC',
-  'WETH',
-  'WMATIC',
-  'WUSDC',
-];

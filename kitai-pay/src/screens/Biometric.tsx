@@ -24,7 +24,7 @@ import { AppNavigatorParamList } from '../navigation';
 type BiometricProps = StackNavigationProps<AppNavigatorParamList, 'BIOMETRIC'>;
 
 const Biometric = ({ navigation, route }: BiometricProps) => {
-  const url = route.params.url;
+  const url = route.params?.url;
   const dispatch = useDispatch();
   const { isFirstLaunch } = useSelector(selectAuthState);
 

@@ -2,9 +2,11 @@ import { useDispatch } from 'react-redux';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { authReducer } from './auth';
+import { errorReducer } from './error';
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  error: errorReducer,
 });
 
 export const store = configureStore({

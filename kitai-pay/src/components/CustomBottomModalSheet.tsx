@@ -1,26 +1,35 @@
-import React, { useRef } from 'react';
-import BottomSheet from '@gorhom/bottom-sheet';
+import React, { forwardRef, ForwardRefRenderFunction, useMemo } from 'react';
+import BottomSheet, { BottomSheetProps } from '@gorhom/bottom-sheet';
 
-interface ICustomBottomModalSheetProps {
-  children: React.ReactNode;
-  snapPoints: string[];
-  handleSheetChanges: (index: number) => void;
+interface ICustomBottomModalSheetProps extends BottomSheetProps {
+  handleSheetChanges?: (index: number) => void;
 }
-const CustomBottomModalSheet = ({
-  children,
-  snapPoints,
-  handleSheetChanges,
-}: ICustomBottomModalSheetProps) => {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+
+const CustomBottomModalSheet: ForwardRefRenderFunction<
+  BottomSheet,
+  ICustomBottomModalSheetProps
+> = (
+  {
+    children,
+    snapPoints = ['25%', '50%', '90%'],
+    handleSheetChanges,
+    index = 1,
+    ...rest
+  },
+  ref,
+) => {
+  const memoSnapPoints = useMemo(() => snapPoints, [snapPoints]);
+
   return (
     <BottomSheet
-      ref={bottomSheetRef}
-      index={1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}>
+      index={index}
+      ref={ref}
+      snapPoints={memoSnapPoints}
+      onChange={handleSheetChanges}
+      {...rest}>
       {children}
     </BottomSheet>
   );
 };
 
-export default CustomBottomModalSheet;
+export default forwardRef(CustomBottomModalSheet);

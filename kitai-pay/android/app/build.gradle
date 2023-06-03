@@ -288,7 +288,6 @@ dependencies {
         implementation jscFlavor
     }
     implementation project(':react-native-push-notification')
-    implementation 'com.google.firebase:firebase-analytics:17.3.0'
     
     implementation project(':react-native-blur')
 }
