@@ -25,7 +25,7 @@ const ErrorSheet = () => {
 
   return (
     <CustomBottomModalSheet
-      snapPoints={['50%']}
+      snapPoints={['40%']}
       ref={ref}
       index={-1}
       backgroundStyle={styles.bottomSheetBack}>
@@ -46,8 +46,8 @@ export default ErrorSheet;
 
 const styles = StyleSheet.create({
   lottieView: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
   },
   container: {
     display: 'flex',

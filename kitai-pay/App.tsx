@@ -34,7 +34,7 @@ const App = () => {
       <QueryClientProvider client={client}>
         <ThirdwebProvider
           theme="dark"
-          activeChain="polygon"
+          activeChain={'mumbai'}
           supportedWallets={[metamaskWallet(), rainbowWallet(), trustWallet()]}
           authConfig={{
             domain: API.BASE_URL,

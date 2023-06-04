@@ -1,7 +1,13 @@
 import { FlatList, StyleSheet, Text, View, Animated } from 'react-native';
 import React, { useCallback, useEffect, useRef } from 'react';
 
-import { DEVICE_WIDTH, DEVICE_HEIGHT, ROUTES, STORAGE } from '../constants';
+import {
+  DEVICE_WIDTH,
+  DEVICE_HEIGHT,
+  ROUTES,
+  STORAGE,
+  COLORS,
+} from '../constants';
 import {
   ConnectWallet,
   useAddress,
@@ -158,6 +164,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: DEVICE_WIDTH,
     height: DEVICE_HEIGHT,
+    backgroundColor: COLORS.BACKGROUND,
   },
   button: {
     width: 100,

@@ -2,6 +2,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,8 +14,37 @@ import { ErrorSheet, LoadingButton, SuccessModal } from '../components';
 import { COLORS } from '../constants';
 import { StackNavigationProps, navigate } from '../helpers';
 import { MainNavigatorParamList } from '../navigation';
-// import { useDispatch } from 'react-redux';
-// import { setError } from '../redux';
+import { usePaymentContract } from '../hooks';
+import { useDispatch } from 'react-redux';
+import { setError } from '../redux';
+// import { convertToPaymentInput } from '../helpers';
+
+const tempInput = {
+  receivers: [
+    {
+      amount: 0 * 1e18,
+      token: '0x0000000000000000000000000000000000000000',
+      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
+    },
+    {
+      amount: 0.00016 * 1e18,
+      token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
+    },
+  ],
+  senders: [
+    {
+      amount: 0 * 1e18,
+      token: '0x0000000000000000000000000000000000000000',
+      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
+    },
+    {
+      amount: 0.00016 * 1e18,
+      token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
+    },
+  ],
+};
 
 type CreatePaymentProps = StackNavigationProps<
   MainNavigatorParamList,
@@ -28,8 +58,11 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
   );
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [description, setDescription] = useState('');
 
   const ref = useRef<FlatList>(null);
+
+  const { addPayment, contract } = usePaymentContract();
 
   const slideToFront = () => {
     ref.current?.scrollToIndex({ index: 0 });
@@ -48,23 +81,40 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
     navigate({ navigation, routeName: ROUTES.DASHBOARD });
   };
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  const onSubmit = () => {
+  // const { data } = useContractRead(contract, 'getPaymentDetails', [3 * 1e18]);
+
+  // console.log('data', data);
+
+  const onSubmit = async () => {
     console.log('submitted');
     setLoading(true);
-    setTimeout(() => {
+    console.log('payment created');
+    console.log('description', description);
+    const paymentId = 1;
+    try {
+      await addPayment({
+        description: description,
+        hasAddedShare: false,
+        // input: convertToPaymentInput({
+        //   senderDetails,
+        //   receiverDetails,
+        // }),
+        input: tempInput,
+        paymentId: paymentId,
+      });
       setLoading(false);
       setSuccess(true);
-      // if(error) {
-      //   dispatch(
-      //     setError({
-      //       hasError: true,
-      //       errorMessage: 'Payment Creation Error!',
-      //     }),
-      //   );
-      // }
-    }, 1000);
+    } catch (error: any) {
+      console.log('error', error);
+      dispatch(
+        setError({
+          hasError: true,
+          errorMessage: error.message,
+        }),
+      );
+    }
   };
 
   return (
@@ -81,6 +131,11 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
           <>
             <View style={styles.centerContainer}>
               <Text style={styles.title}>Creating New Payment</Text>
+              <TextInput
+                placeholder="Payment Description"
+                style={styles.paymentDescriptionInput}
+                onChangeText={text => setDescription(text)}
+              />
               <TouchableOpacity
                 onPress={slideToMiddle}
                 style={styles.buttonSmall}>
@@ -150,6 +205,15 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: COLORS.WHITE,
+    fontSize: 16,
+  },
+  paymentDescriptionInput: {
+    backgroundColor: COLORS.LIGHT_GREY,
+    borderRadius: 16,
+    marginHorizontal: 20,
+    marginVertical: 15,
+    height: 50,
+    paddingHorizontal: 20,
     fontSize: 16,
   },
 });

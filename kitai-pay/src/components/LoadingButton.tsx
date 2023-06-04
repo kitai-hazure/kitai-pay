@@ -16,7 +16,11 @@ const LoadingButton = ({
   buttonText,
 }: LoadingButtonProps) => {
   return (
-    <TouchableOpacity onPress={onSubmit} style={styles.button}>
+    <TouchableOpacity
+      onPress={onSubmit}
+      style={styles.button}
+      // disabled={loading}
+    >
       {loading ? (
         <AnimatedLottieView
           style={styles.lottieView}

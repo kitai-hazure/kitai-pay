@@ -225,8 +225,6 @@ const PaymentInput = ({
     }
   }, [selectedData]);
 
-  console.log('rerendering');
-
   return (
     <SafeAreaView style={styles.container}>
       <Animated.FlatList
