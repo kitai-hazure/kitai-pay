@@ -15,33 +15,23 @@ import { COLORS } from '../constants';
 import { StackNavigationProps, navigate } from '../helpers';
 import { MainNavigatorParamList } from '../navigation';
 import { usePaymentContract } from '../hooks';
-import { useDispatch } from 'react-redux';
-import { setError } from '../redux';
-// import { convertToPaymentInput } from '../helpers';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuthState, setError } from '../redux';
+import { convertToPaymentInput } from '../helpers';
 
 const tempInput = {
   receivers: [
     {
-      amount: 0 * 1e18,
-      token: '0x0000000000000000000000000000000000000000',
-      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
-    },
-    {
-      amount: 0.00016 * 1e18,
+      amount: 0.0000001 * 1e18,
       token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
+      user: '0xC5aE504A241ce3D4948213925f7c57783E51CBD1',
     },
   ],
   senders: [
     {
-      amount: 0 * 1e18,
-      token: '0x0000000000000000000000000000000000000000',
-      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
-    },
-    {
-      amount: 0.00016 * 1e18,
+      amount: 0.0000001 * 1e18,
       token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-      user: '0xACEe0D180d0118FD4F3027Ab801cc862520570d1',
+      user: '0x73b794FcA37Dc5951dcdb2674401C299f9775493',
     },
   ],
 };
@@ -83,6 +73,8 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
 
   const dispatch = useDispatch();
 
+  const { token } = useSelector(selectAuthState);
+
   // const { data } = useContractRead(contract, 'getPaymentDetails', [3 * 1e18]);
 
   // console.log('data', data);
@@ -92,20 +84,47 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
     setLoading(true);
     console.log('payment created');
     console.log('description', description);
-    const paymentId = 1;
+    // const paymentId = 10;
     try {
-      await addPayment({
-        description: description,
-        hasAddedShare: false,
-        // input: convertToPaymentInput({
-        //   senderDetails,
-        //   receiverDetails,
-        // }),
-        input: tempInput,
-        paymentId: paymentId,
+      // backend call that adds the signature
+      fetch('http://192.168.29.124:8080/graphql', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation Mutation($paymentInput: PaymentInput!) {
+              createPayment(payment_input: $paymentInput)
+            }
+          `,
+          variables: {
+            paymentInput: tempInput,
+          },
+        }),
+      }).then(res => {
+        if (res.status !== 200) {
+          throw new Error('Something went wrong');
+        }
+        res.json().then(async data => {
+          const paymentIDFromBackend = data.data.createPayment;
+          // TODO ADD AWAIT HERE
+          addPayment({
+            description: description,
+            hasAddedShare: false,
+            input: convertToPaymentInput({
+              senderDetails,
+              receiverDetails,
+            }),
+            // input: tempInput,
+            paymentId: paymentIDFromBackend,
+          });
+          setTimeout(() => {
+            setLoading(false);
+            setSuccess(true);
+          }, 15000);
+        });
       });
-      setLoading(false);
-      setSuccess(true);
     } catch (error: any) {
       console.log('error', error);
       dispatch(

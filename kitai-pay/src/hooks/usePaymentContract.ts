@@ -45,20 +45,14 @@ const usePaymentContract = () => {
   }
 
   const addPayment = async (data: CreatePaymentInput) => {
-    try {
-      console.log('This function is being called');
-      const result = await createPayment({
-        args: [
-          data.paymentId,
-          data.input,
-          data.description,
-          data.hasAddedShare,
-        ],
-      });
-      console.log(result);
-    } catch (err) {
-      console.error(err);
-    }
+    console.log('This function is being called', data);
+    const result = await createPayment({
+      args: [data.paymentId, data.input, data.description, data.hasAddedShare],
+      overrides: {
+        gasLimit: 1000000,
+      },
+    });
+    console.log('RESULT: ', result);
   };
 
   return { addPayment, contract };

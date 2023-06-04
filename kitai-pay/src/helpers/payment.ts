@@ -24,7 +24,7 @@ export const convertToPaymentInput = ({
 
     let ethToken: PaymentInputUnit = {
       amount: 0,
-      token: '0x0000000000000000000000000000000000000000',
+      token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
       user: sender.address,
     };
 
@@ -39,16 +39,16 @@ export const convertToPaymentInput = ({
 
       const tokenSet = new Set<string>();
       if (
-        token.token.address === '0x0000000000000000000000000000000000000000'
+        token.token.address === '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
       ) {
         ethToken = {
           user: sender.address,
-          amount: parseFloat(token.amount),
+          amount: parseFloat(token.amount) * 1e18,
           token: token.token.address,
         };
       } else {
         try {
-          parseFloat(token.amount);
+          parseFloat(token.amount) * 1e18;
         } catch (err) {
           throw new Error(
             `Invalid amount for sender ${shortenedAddress(
@@ -65,7 +65,7 @@ export const convertToPaymentInput = ({
         }
         input.senders.push({
           user: sender.address,
-          amount: parseFloat(token.amount),
+          amount: parseFloat(token.amount) * 1e18,
           token: token.token.address,
         });
       }
@@ -101,7 +101,7 @@ export const convertToPaymentInput = ({
 
     let ethToken: PaymentInputUnit = {
       amount: 0,
-      token: '0x0000000000000000000000000000000000000000',
+      token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
       user: receiver.address,
     };
 
@@ -117,16 +117,16 @@ export const convertToPaymentInput = ({
       const tokenSet = new Set<string>();
 
       if (
-        token.token.address === '0x0000000000000000000000000000000000000000'
+        token.token.address === '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
       ) {
         ethToken = {
           user: receiver.address,
-          amount: parseFloat(token.amount),
+          amount: parseFloat(token.amount) * 1e18,
           token: token.token.address,
         };
       } else {
         try {
-          parseFloat(token.amount);
+          parseFloat(token.amount) * 1e18;
         } catch (err) {
           throw new Error(
             `Invalid amount for receiver ${shortenedAddress(
@@ -145,7 +145,7 @@ export const convertToPaymentInput = ({
 
         input.receivers.push({
           user: receiver.address,
-          amount: parseFloat(token.amount),
+          amount: parseFloat(token.amount) * 1e18,
           token: token.token.address,
         });
       }
