@@ -24,7 +24,7 @@ export const convertToPaymentInput = ({
 
     let ethToken: PaymentInputUnit = {
       amount: 0,
-      token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      token: '0x0000000000000000000000000000000000000000',
       user: sender.address,
     };
 
@@ -39,7 +39,7 @@ export const convertToPaymentInput = ({
 
       const tokenSet = new Set<string>();
       if (
-        token.token.address === '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+        token.token.address === '0x0000000000000000000000000000000000000000'
       ) {
         ethToken = {
           user: sender.address,
@@ -80,6 +80,11 @@ export const convertToPaymentInput = ({
       }
     });
 
+    ethToken = {
+      amount: 0 * 1e18,
+      token: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB', // CHAINLINK ADDRESS TEMPORARY
+      user: ethToken.user,
+    };
     input.senders = [ethToken, ...input.senders];
 
     if (!senderSet.has(sender.address)) {
@@ -101,7 +106,7 @@ export const convertToPaymentInput = ({
 
     let ethToken: PaymentInputUnit = {
       amount: 0,
-      token: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      token: '0x0000000000000000000000000000000000000000',
       user: receiver.address,
     };
 
@@ -117,7 +122,7 @@ export const convertToPaymentInput = ({
       const tokenSet = new Set<string>();
 
       if (
-        token.token.address === '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889'
+        token.token.address === '0x0000000000000000000000000000000000000000'
       ) {
         ethToken = {
           user: receiver.address,
@@ -160,6 +165,11 @@ export const convertToPaymentInput = ({
       }
     });
 
+    ethToken = {
+      amount: 0 * 1e18,
+      token: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB', // CHAINLINK ADDRESS TEMPORARY
+      user: ethToken.user,
+    };
     input.receivers = [ethToken, ...input.receivers];
 
     if (!receiverSet.has(receiver.address)) {
