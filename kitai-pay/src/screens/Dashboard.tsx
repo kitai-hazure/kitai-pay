@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Button,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,15 +8,27 @@ import {
   View,
 } from 'react-native';
 import { StackNavigationProps, navigate, shortenedAddress } from '../helpers';
-import { handleNotification } from '../components/Notification';
 import { MainNavigatorParamList } from '../navigation';
 import useSecureRoute from '../hooks/useSecureRoute';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../redux';
 import DashboardShadow from './shadows/DashboardShadow';
-import { ROUTES, COLORS } from '../constants';
+import { ROUTES, COLORS, CHAIN_DETAILS } from '../constants';
 import AnimatedLottieView from 'lottie-react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+
+export const getDisplayAmount = (amount: string) => {
+  const newAmount = parseInt(amount, 10) / 1e18;
+  return newAmount.toFixed(5);
+};
+
+interface GasDetails {
+  average: string;
+  baseFee?: string;
+  high: string;
+  lastBlock: string;
+  low: string;
+}
 
 type DashboardProps = StackNavigationProps<MainNavigatorParamList, 'DASHBOARD'>;
 
@@ -25,6 +37,49 @@ const Dashboard = ({ navigation }: DashboardProps) => {
   const { address } = useSelector(selectAuthState);
   const shortAddress = shortenedAddress(address);
   console.log('shortAddress', shortAddress);
+  const [gasDetails, setGasDetails] = React.useState<GasDetails>();
+  const [amount, setAmount] = React.useState<string>();
+
+  const getGasPrice = async () => {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ',
+      },
+    };
+
+    fetch(
+      'https://web3.luniverse.io/v1/polygon/mumbai/transactions/gas/price',
+      options,
+    )
+      .then(response => response.json())
+      .then(response => setGasDetails(response.data))
+      .catch(err => console.error(err));
+  };
+
+  const getAmount = async () => {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ',
+      },
+    };
+
+    fetch(
+      'https://web3.luniverse.io/v1/polygon/mumbai/accounts/0xACEe0D180d0118FD4F3027Ab801cc862520570d1/balance?page=1&rpp=20',
+      options,
+    )
+      .then(response => response.json())
+      .then(response => setAmount(response.data.items[0].amount))
+      .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    getGasPrice();
+    getAmount();
+  }, []);
 
   const navigateToCreatePayment = () => {
     navigate({ navigation, routeName: ROUTES.CREATE_PAYMENT });
@@ -88,6 +143,27 @@ const Dashboard = ({ navigation }: DashboardProps) => {
         <View>
           <Text style={styles.welcomeText}>Welcome</Text>
           <Text style={styles.accountAddress}>{shortAddress}</Text>
+          <Text style={styles.extraData}>
+            {CHAIN_DETAILS.NAME} : {CHAIN_DETAILS.ID}
+          </Text>
+          <View style={styles.tokenContainer}>
+            <Text style={styles.extraData}>
+              Wallet: {amount !== undefined ? getDisplayAmount(amount) : null}{' '}
+              {CHAIN_DETAILS.DEFAULT_TOKEN.symbol}
+            </Text>
+            <Image
+              source={{ uri: CHAIN_DETAILS.DEFAULT_TOKEN.image }}
+              style={styles.image}
+            />
+          </View>
+          <View style={styles.flexRow}>
+            <Text style={styles.extraData}>Average gas price</Text>
+            <Text style={styles.extraData}>{gasDetails?.average}</Text>
+          </View>
+          <View style={styles.flexRow}>
+            <Text style={styles.extraData}>Fastest gas price</Text>
+            <Text style={styles.extraData}>{gasDetails?.high}</Text>
+          </View>
         </View>
       </View>
       <View style={styles.iconWrapper}>
@@ -105,10 +181,6 @@ const Dashboard = ({ navigation }: DashboardProps) => {
           </TouchableOpacity>
         ))}
       </View>
-      <Button
-        title="NOTIFY ME"
-        onPress={() => handleNotification('TITLE', 'HEYLOO')}
-      />
     </ScrollView>
   );
 };
@@ -135,6 +207,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    height: 180,
   },
   accountAddress: {
     fontSize: 16,
@@ -182,5 +255,43 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
     textAlign: 'center',
+  },
+  extraData: {
+    fontSize: 12,
+    color: COLORS.WHITE,
+    opacity: 0.6,
+    paddingLeft: 20,
+    marginTop: 5,
+  },
+  tokenContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  image: {
+    width: 15,
+    height: 15,
+    marginLeft: 5,
+    marginTop: 6,
+  },
+  flexRow: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  cardContainerBottom: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 20,
+    backgroundColor: COLORS.LIGHT_GREY,
+    shadowColor: COLORS.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
+    display: 'flex',
+    flexDirection: 'column',
+    height: 150,
   },
 });
