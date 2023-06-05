@@ -28,7 +28,7 @@ import kitaipayContract from '../contracts/KitaiPay.json';
 //   },
 // ];
 
-const TOKEN_OPTIONS_POLYGON: Token[] = [
+export const TOKEN_OPTIONS_POLYGON: Token[] = [
   {
     name: 'Matic Token',
     symbol: 'MATIC',

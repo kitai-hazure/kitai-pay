@@ -5,3 +5,5 @@ export { default as Dashboard } from './Dashboard';
 export { default as NotFound } from './NotFound';
 export { default as Splash } from './Splash';
 export { default as CreatePayment } from './CreatePayment';
+export { default as PaymentHistoryScreen } from './PaymentHistory';
+export { default as MyAssetScreen } from './MyAssets';

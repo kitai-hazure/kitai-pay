@@ -8,4 +8,6 @@ export const ROUTES = {
   PAYMENT_DETAILS: 'PAYMENT_DETAILS' as const,
   PAYMENTS: 'PAYMENTS' as const,
   NOT_FOUND: 'NOT_FOUND' as const,
+  PAYMENT_HISTORY: 'PAYMENT_HISTORY' as const,
+  MYASSET_SCREEN: 'MYASSET_SCREEN' as const,
 };
