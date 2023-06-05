@@ -111,7 +111,7 @@ const CreatePayment = ({ navigation }: CreatePaymentProps) => {
           // TODO ADD AWAIT HERE
           addPayment({
             description: description,
-            hasAddedShare: false,
+            hasAddedShare: true,
             input: convertToPaymentInput({
               senderDetails,
               receiverDetails,
