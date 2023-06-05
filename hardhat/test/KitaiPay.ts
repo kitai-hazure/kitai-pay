@@ -1,6 +1,6 @@
 import { expect } from "chai";
 // @ts-ignore
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 
 const TOKENS = [
   "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
@@ -144,6 +144,87 @@ describe("KitaiPay", function () {
       expect(payment.description).to.equal(PAYMENT_DESCRIPTION);
       expect(payment.completed).to.equal(false);
       expect(payment.cancelled).to.equal(false);
+    });
+  });
+
+  describe("Payment With Share", function () {
+    it("Should add the payment signature", async () => {
+      const PAYMENT_ID = 1;
+      // @ts-ignore
+      const PAYMENT = GET_PAYMENT_INPUT([OWNER, ...OTHER_ACCOUNT]);
+      const SIGNATURE = GET_SIGNATURE(PAYMENT, PAYMENT_ID);
+
+      await KITAI_PAY.addPaymentSignature(PAYMENT_ID, SIGNATURE);
+    });
+
+    it("Should create a payment and send tokens", async () => {
+      const PAYMENT_ID = 1;
+      let account1 = OTHER_ACCOUNT[0].address;
+      let account2 = OTHER_ACCOUNT[1].address;
+      let account3 = OTHER_ACCOUNT[2].address;
+
+      let KitaiToken = await ethers.getContractFactory("KitaiToken");
+      let contract_owner = await ethers.getSigner(OWNER.address);
+      let TOKEN_CONTRACT = await KitaiToken.connect(contract_owner).deploy(
+        1000
+      );
+      await TOKEN_CONTRACT.deployed();
+
+      expect(await TOKEN_CONTRACT.balanceOf(OWNER.address)).to.equal(1000);
+
+      const PAYMENT = {
+        senders: [
+          {
+            user: OWNER.address,
+            token: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+            amount: 0,
+          },
+          {
+            user: OWNER.address,
+            token: TOKEN_CONTRACT.address,
+            amount: 100,
+          },
+        ],
+        receivers: [
+          {
+            user: account2,
+            token: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+            amount: 0,
+          },
+          {
+            user: account2,
+            token: TOKEN_CONTRACT.address,
+            amount: 50,
+          },
+          {
+            user: account3,
+            token: TOKEN_CONTRACT.address,
+            amount: 50,
+          },
+        ],
+      };
+
+      const SIGNATURE = GET_SIGNATURE(PAYMENT, PAYMENT_ID);
+
+      await KITAI_PAY.addPaymentSignature(PAYMENT_ID, SIGNATURE);
+
+      const PAYMENT_DESCRIPTION = "THIS IS A TEST PAYMENT";
+
+      // TODO: REMOVE THIS
+      await KITAI_PAY.approvePayment(PAYMENT_ID, 1000, TOKEN_CONTRACT.address);
+
+      await KITAI_PAY.createPayment(
+        PAYMENT_ID,
+        PAYMENT,
+        PAYMENT_DESCRIPTION,
+        true // owner is sending 1 ETH according to the payment
+      );
+      // const payment = await KITAI_PAY.getPaymentDetails(PAYMENT_ID);
+      // expect(payment.length).to.equal(6);
+      // expect(payment.owner).to.equal(OWNER.address);
+      // expect(payment.description).to.equal(PAYMENT_DESCRIPTION);
+      // expect(payment.completed).to.equal(false);
+      // expect(payment.cancelled).to.equal(false);
     });
   });
 });

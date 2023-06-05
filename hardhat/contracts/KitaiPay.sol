@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "hardhat/console.sol";
 
 error KitaiPay__PaymentAlreadyCompleted();
 error KitaiPay__PaymentAlreadyCancelled();
@@ -240,9 +241,19 @@ contract KitaiPay {
             revert KitaiPay__NotEnoughBalance();
         }
 
-        payable(address(this)).transfer(senderItems[0].amount);
+        // payable(address(this)).transfer(senderItems[0].amount);
         for (uint256 i = 1; i < senderItems.length; i++) {
             IERC20 token = IERC20(senderItems[i].token);
+            console.log("senderItems[i].amount", senderItems[i].amount);
+            // console.log("approved: ", token.approve(address(this), 100));
+            // token.approve(msg.sender, 1000);
+            console.log("token", senderItems[i].token);
+            console.log("msg.sender", msg.sender);
+            console.log("address(this)", address(this));
+            console.log(
+                "allowance",
+                token.allowance(msg.sender, address(this))
+            );
             if (
                 !token.transferFrom(
                     msg.sender,
@@ -459,5 +470,21 @@ contract KitaiPay {
     ) public view returns (bool) {
         ensureIsValidPayment(paymentId);
         return _paymentSenderStatuses[paymentId][sender];
+    }
+
+    function approvePayment(
+        uint256 paymentId,
+        uint256 amount,
+        address token
+    ) public {
+        IERC20 tokenContract = IERC20(token);
+        if (!tokenContract.approve(address(this), amount)) {
+            revert KitaiPay__InternalContractError();
+        }
+        if (!tokenContract.approve(msg.sender, amount)) {
+            revert KitaiPay__InternalContractError();
+        }
+        console.log("Approved", token);
+        console.log("Approved this address", address(this));
     }
 }
